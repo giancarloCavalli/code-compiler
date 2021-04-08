@@ -12,10 +12,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
+
+import compilador.services.gals.LexicalError;
+import compilador.services.gals.Lexico;
+import compilador.services.gals.Token;
 
 public class ToolbarService {
 
@@ -121,6 +127,38 @@ public class ToolbarService {
 	public void cutFromTextComponent(JTextComponent textComponent) {
 		copyTextToClipBoard(textComponent.getText());
 		cleanText(textComponent);
+	}
+	
+	public int getTokenLine(String input, int position) {
+		int line = 1;
+		Pattern pattern = Pattern.compile("\n");
+		Matcher matcher = pattern.matcher(input.substring(0, position));
+		while (matcher.find()) {
+			line++;
+		}
+		return line;
+	}
+	
+	public String compileCode(String input) {
+		StringBuilder compileMsg = new StringBuilder();
+		Lexico lexico = new Lexico(input);
+		
+		try {
+			Token t = null;
+			compileMsg.append("linha\tclasse\t\tlexema\n");
+			while ((t = lexico.nextToken()) != null) {
+				compileMsg.append(getTokenLine(input, t.getPosition()) + "\t" + t.getId() + "\t\t" + t.getLexeme() + "\n");
+			}
+			compileMsg.append("\nprograma compilado com sucesso");
+		} catch (LexicalError e) {
+			compileMsg = new StringBuilder();
+			if (e.getMessage().equals("símbolo inválido"))
+				compileMsg.append("Erro na linha " + getTokenLine(input, e.getPosition()) + " - " + input.charAt(e.getPosition()) + " " + e.getMessage());
+			else
+				compileMsg.append("Erro na linha " + getTokenLine(input, e.getPosition()) + " - " + e.getMessage());
+		}
+		
+		return String.valueOf(compileMsg);
 	}
 
 }
