@@ -27,11 +27,6 @@ import javax.swing.text.JTextComponent;
 
 import compilador.services.AppViewService;
 import compilador.services.ToolbarService;
-import compilador.services.gals.LexicalError;
-import compilador.services.gals.Lexico;
-import compilador.services.gals.Token;
-
-import java.awt.event.ActionListener;
 
 public class App {
 
@@ -223,18 +218,6 @@ public class App {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				/* TODO
-				 * 1. Estrutura em caso de sucesso:
-				 * LINHA	CLASSE	LEXEMA
-				 * LINHA: tem que ser adaptado a partir do t.getPosition que retorna o indice em relacao à string toda
-				 * CLASSE: adaptar o t.getId, pois retorna um numero que corresponde a cada classe
-				 * LEXEMA: OK
-				 * 
-				 * 2. Estrutura em caso de erro
-				 * LINHA	SÍMBOLO (quando for símbolo inválido)	MSG_ERRO_ScannerConstants
-				 * Deve aparecer SOMENTE o erro (não pode aparecer os tokens lidos com sucesso até o momento)
-				 * OK - Ajustar msgs de erro na classe ScannerConstants
-				 */
 				taMessage.setText(toolbarService.compileCode(taEditor.getText()));
 			}
 		};

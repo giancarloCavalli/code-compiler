@@ -1,8 +1,5 @@
 package compilador.services.gals;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Token {
 	private int id;
 	private String lexeme;

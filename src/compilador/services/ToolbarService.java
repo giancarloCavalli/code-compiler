@@ -19,12 +19,14 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
 
+import compilador.repositories.ConvertedId;
 import compilador.services.gals.LexicalError;
 import compilador.services.gals.Lexico;
 import compilador.services.gals.Token;
 
 public class ToolbarService {
-
+	private ConvertedId conversorId = new ConvertedId();
+	
 	public ToolbarService() {
 	}
 
@@ -36,7 +38,7 @@ public class ToolbarService {
 	// retorna null
 	public String saveFile(String dataToBeSaved, String fileType) throws RuntimeException, IOException {
 		String filePath = "";
-		if (dataToBeSaved.isBlank() || dataToBeSaved.isEmpty())
+		if (dataToBeSaved.isEmpty())
 			throw new RuntimeException("Não há dados a serem salvos");
 		else {
 			JFileChooser chooser = new JFileChooser();
@@ -138,6 +140,7 @@ public class ToolbarService {
 		}
 		return line;
 	}
+
 	
 	public String compileCode(String input) {
 		StringBuilder compileMsg = new StringBuilder();
@@ -145,9 +148,9 @@ public class ToolbarService {
 		
 		try {
 			Token t = null;
-			compileMsg.append("linha\tclasse\t\tlexema\n");
+			compileMsg.append("linha\tclasse\t\t\tlexema\n");
 			while ((t = lexico.nextToken()) != null) {
-				compileMsg.append(getTokenLine(input, t.getPosition()) + "\t" + t.getId() + "\t\t" + t.getLexeme() + "\n");
+				compileMsg.append(getTokenLine(input, t.getPosition()) + "\t" + conversorId.getHashByKey((t.getId())) + "\t\t" + t.getLexeme() + "\n");
 			}
 			compileMsg.append("\nprograma compilado com sucesso");
 		} catch (LexicalError e) {
